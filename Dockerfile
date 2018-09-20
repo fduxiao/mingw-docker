@@ -18,8 +18,13 @@ RUN install.sh isl
 RUN install.sh cloog
 RUN install.sh mingw-w64-gcc-base
 RUN install.sh mingw-w64-crt
+RUN pacman -Rdd --noconfirm mingw-w64-headers-bootstrap
 RUN install.sh mingw-w64-winpthreads
-RUN install.sh mingw-w64-gcc
+RUN sudo -u pkg git clone https://aur.archlinux.org/mingw-w64-gcc
+RUN cd mingw-w64-gcc && sudo -u pkg makepkg
+RUN pacman -Rdd --noconfirm mingw-w64-gcc-base
+RUN pacman -U mingw-w64-gcc-*.tar.xz
+RUN cd .. && rm -rf mingw-w64-gcc
 RUN install.sh mingw-w64-pkg-config
 RUN install.sh mingw-w64-cmake
-
+WORKDIR /
